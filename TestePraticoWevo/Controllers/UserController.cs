@@ -3,38 +3,84 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.AspNetCore.Mvc;
 
 namespace TestePraticoWevo.Controllers {
 	[Route("api/[controller]")]
 	[ApiController]
 	public class UserController:ControllerBase {
-		// GET: api/<UserController>
-		[HttpGet]
-		public IEnumerable<string> Get() {
-			return new string[] { "value1", "value2" };
-		}
+        public UserController(AppDb db) {
+            Db = db;
+        }
 
-		// GET api/<UserController>/5
-		[HttpGet("{id}")]
-		public string Get(int id) {
-			return "value";
-		}
+        // GET api/user
+        [HttpGet]
+        public async Task<IActionResult> GetLatest() {
+            await Db.Connection.OpenAsync();
+            var query = new UserQuery(Db);
+            var result = await query.LatestPostsAsync();
+            return new OkObjectResult(result);
+        }
 
-		// POST api/<UserController>
-		[HttpPost]
-		public void Post([FromBody] string value) {
-		}
+        // GET api/user/5
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOne(int id) {
+            await Db.Connection.OpenAsync();
+            var query = new UserQuery(Db);
+            var result = await query.FindOneAsync(id);
+            if(result is null)
+                return new NotFoundResult();
+            return new OkObjectResult(result);
+        }
 
-		// PUT api/<UserController>/5
-		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] string value) {
-		}
+        // POST api/user
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] User body) {
+            await Db.Connection.OpenAsync();
+            body.Db = Db;
+            await body.InsertAsync();
+            return new OkObjectResult(body);
+        }
 
-		// DELETE api/<UserController>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id) {
-		}
+        // PUT api/user/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutOne(int id, [FromBody] User body) {
+            await Db.Connection.OpenAsync();
+            var query = new UserQuery(Db);
+            var result = await query.FindOneAsync(id);
+            if(result is null)
+                return new NotFoundResult();
+            result.Name = body.Name;
+            result.Cpf = body.Cpf;
+            result.Email = body.Email;
+            result.Phone = body.Phone;
+            result.Gender = body.Gender;
+            result.BirthDate = body.BirthDate;
+            await result.UpdateAsync();
+            return new OkObjectResult(result);
+        }
+
+        // DELETE api/user/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOne(int id) {
+            await Db.Connection.OpenAsync();
+            var query = new UserQuery(Db);
+            var result = await query.FindOneAsync(id);
+            if(result is null)
+                return new NotFoundResult();
+            await result.DeleteAsync();
+            return new OkResult();
+        }
+
+        // DELETE api/user
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAll() {
+            await Db.Connection.OpenAsync();
+            var query = new UserQuery(Db);
+            await query.DeleteAllAsync();
+            return new OkResult();
+        }
+
+        public AppDb Db { get; }
 	}
 }
