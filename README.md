@@ -5,7 +5,7 @@
 https://wevo.marlonbraga.dev/
 (Se a propagação do nome de domínio ainda não aconteceu, será necessário esperar 48 horas)
 
-# Cração de Tabela:
+# Criação de Tabela:
 CREATE TABLE `user` (
   `ID` bigint UNSIGNED NOT NULL,
   `NAME` varchar(50) DEFAULT NULL,
