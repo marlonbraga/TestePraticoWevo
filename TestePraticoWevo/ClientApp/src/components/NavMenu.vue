@@ -16,10 +16,12 @@
                     <ul class="navbar-nav flex-grow">
                         <li class="nav-item">
                             <router-link :to="{ name: 'Home' }" class="nav-link text-dark">Home</router-link>
-
                         </li>
                         <li class="nav-item">
                             <router-link :to="{ name: 'Users' }" class="nav-link text-dark">Usuarios</router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link :to="{ name: 'UserForm' }" class="nav-link text-dark">Novo Usuario</router-link>
                         </li>
                     </ul>
                 </div>

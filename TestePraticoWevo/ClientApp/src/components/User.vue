@@ -1,7 +1,7 @@
 <template>
     <h1 id="tableLabel">Usuarios</h1>
 
-    <p>...</p>
+    <p>Dados persistidos no banco MySQL</p>
 
     <p v-if="!users"><em>Carregando...</em></p>
 
@@ -15,6 +15,7 @@
                 <th>Telefone</th>
                 <th>Sexo</th>
                 <th>Data de Nascimento</th>
+                <th> </th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +27,7 @@
                 <td>{{ user.phone }}</td>
                 <td>{{ user.gender }}</td>
                 <td>{{ user.birthDate }}</td>
+                <td><a href="api/" type="button">Deletar</a></td>
             </tr>
         </tbody>
     </table>
@@ -44,6 +46,15 @@
         methods: {
             getUsers() {
                 axios.get('/api/user')
+                    .then((response) => {
+                        this.users = response.data;
+                    })
+                    .catch(function (error) {
+                        alert(error);
+                    });
+            },
+            deleteUser(id) {
+                axios.delete('/api/user/'+id)
                     .then((response) => {
                         this.users = response.data;
                     })

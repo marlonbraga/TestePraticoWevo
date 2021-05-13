@@ -54,7 +54,7 @@ namespace TestePraticoWevo {
                     users.Add(user);
                 }
             }
-            return posts;
+            return users;
         }
     }
 }
