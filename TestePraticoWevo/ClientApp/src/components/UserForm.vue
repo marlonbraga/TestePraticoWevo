@@ -33,7 +33,7 @@
             </tr>
         </tbody>
     </table>
-    <button v-on:click="postUser" class="btn btn-primary">Salvar</button>
+    <router-link :to="{ name: 'Users' }" v-on:click="save" class="btn btn-success">Salvar</router-link>
 </template>
 
 
@@ -43,34 +43,62 @@
         name: "UserForm",
         data() {
             return {
+                idUser: null,
                 users: []
             }
         },
         methods: {
-            getUser(id){
-                axios.get('/api/user/'+id)
+            getUser(id) {
+                axios.get('/api/user/' + id)
                     .then((response) => {
                         this.user = response.data;
-                        document.getElementById("Name").value = this.user.name ,
-                        document.getElementById("Cpf").value = this.user.cpf ,
-                        document.getElementById("Email").value = this.user.email ,
-                        document.getElementById("Phone").value = this.user.phone ,
-                        document.getElementById("Gender").value = this.user.gender ,
-                        document.getElementById("BirthDate").value = this.user.birthDate
+                        document.getElementById("Name").value = this.user.name,
+                            document.getElementById("Cpf").value = this.user.cpf,
+                            document.getElementById("Email").value = this.user.email,
+                            document.getElementById("Phone").value = this.user.phone,
+                            document.getElementById("Gender").value = this.user.gender,
+                            document.getElementById("BirthDate").value = this.user.birthDate
+                    })
+                    .catch(function (error) {
+                        alert(error);
+                    });
+            },
+            save() {
+                if (this.idUser)
+                    this.putUser(this.idUser);
+                else
+                    this.postUser();
+            },
+            putUser(idUser) {
+                let targetUser = {
+                    id: parseInt(idUser),
+                    name: `${document.getElementById("Name").value}`,
+                    cpf: `${document.getElementById("Cpf").value}`,
+                    email: `${document.getElementById("Email").value}`,
+                    phone: `${document.getElementById("Phone").value}`,
+                    gender: parseInt(document.getElementById("Gender").value),
+                    birthDate: `${document.getElementById("BirthDate").value}`
+                };
+                console.log(targetUser);
+                axios.put('/api/user/' + idUser, targetUser)
+                    .then((response) => {
+                        this.users = response.data;
                     })
                     .catch(function (error) {
                         alert(error);
                     });
             },
             postUser() {
-                axios.post('/api/user', {
-                    name:       document.getElementById("Name").value,
-                    cpf:        document.getElementById("Cpf").value,
-                    email:      document.getElementById("Email").value,
-                    phone:      document.getElementById("Phone").value,
-                    gender:     document.getElementById("Gender").value,
-                    birthDate:  document.getElementById("BirthDate").value 
-                })
+                let newUser = {
+                    name: `${document.getElementById("Name").value}`,
+                    cpf: `${document.getElementById("Cpf").value}`,
+                    email: `${document.getElementById("Email").value}`,
+                    phone: `${document.getElementById("Phone").value}`,
+                    gender: parseInt(document.getElementById("Gender").value),
+                    birthDate: `${document.getElementById("BirthDate").value}`
+                };
+                console.log(newUser);
+                axios.post('/api/user', newUser)
                     .then((response) => {
                         this.users = response.data;
                     })
@@ -80,7 +108,12 @@
             },
         },
         mounted() {
-            this.getUser(1);
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            if (urlParams.has('id')) {
+                this.idUser = urlParams.get('id');
+                this.getUser(urlParams.get('id'));
+            }
         }
     }
 </script>

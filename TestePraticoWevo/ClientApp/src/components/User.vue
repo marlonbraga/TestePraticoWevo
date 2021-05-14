@@ -27,10 +27,15 @@
                 <td>{{ user.phone }}</td>
                 <td>{{ user.gender }}</td>
                 <td>{{ user.birthDate }}</td>
-                <td><a href="api/" type="button">Deletar</a></td>
+                <td>
+                    <router-link :to="'/UserForm?id='+user.id" class="btn btn-primary">Editar</router-link>
+                    <button v-on:click="deleteUser(user.id)" class="btn btn-danger">Deletar</button>
+                </td>
             </tr>
         </tbody>
     </table>
+
+    <router-link :to="{ name: 'UserForm' }" class="btn btn-success"><i class="fas fa-plus"></i>Adicionar</router-link>
 </template>
 
 
@@ -61,27 +66,10 @@
                     .catch(function (error) {
                         alert(error);
                     });
-            },
-            postUsers() {
-                axios.post('/api/user', {
-                    name: 'Bruna Alves',
-                    cpf: '12345678910',
-                    email: 'bruna.alves@wevo.io',
-                    phone: '1142399200',
-                    gender: 0,
-                    birthDate: '1995-05-29T00:00:00'
-                })
-                    .then((response) => {
-                        this.users = response.data;
-                    })
-                    .catch(function (error) {
-                        alert(error);
-                    });
-            },
+            }
         },
         mounted() {
             this.getUsers();
-            //this.postUsers();
         }
     }
 </script>
