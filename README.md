@@ -1,11 +1,18 @@
+# Demonstração
+https://wevo.marlonbraga.dev/
+
+## Manipular diretamente API
+* [GET] /api/user
+* [GET] /api /user/2
+* [POST] /api/user
+* [PUT] /api/user/2
+* [DELETE] /api/user/2
+* [DELETE] /api/user
+
 # Como fazer funcionar
 É necessário trocar a string de conexão do projeto
 
-# Demonstração
-https://wevo.marlonbraga.dev/
-(Se a propagação do nome de domínio ainda não aconteceu, será necessário esperar 48 horas)
-
-# Criação de Tabela:
+## Criação de Tabela:
 CREATE TABLE `user` (
   `ID` bigint UNSIGNED NOT NULL,
   `NAME` varchar(50) DEFAULT NULL,
